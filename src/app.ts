@@ -36,6 +36,10 @@ app.use(
   },
 );
 
+app.get('/crash', (req, res) => {
+  process.exit(1);
+});
+
 app.get(
   "/health",
   (_req, res) => {
