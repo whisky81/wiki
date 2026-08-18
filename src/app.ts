@@ -55,6 +55,13 @@ app.get(
   },
 );
 
+app.get('/deploy', (_req, res) => {
+  res.json({
+    success: true,
+    message: 'Deployment successful',
+  })
+});
+
 app.get(
   "/",
   (_req, res) => {
