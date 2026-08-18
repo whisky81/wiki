@@ -60,6 +60,4 @@ jobs:
           ssh \
             -p "$VPS_PORT" \
             "$VPS_USER@$VPS_HOST" \
-            'cd /opt/wiki-app &&
-             git pull origin main &&
-             docker compose up -d --build'
+            'bash -s' < scripts/deploy.sh
