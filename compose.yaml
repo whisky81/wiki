@@ -1,0 +1,30 @@
+services:
+  wiki:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - "${FORWARD_PORT}:3000"
+
+    env_file:
+      - .env
+
+    volumes:
+      - wiki-data:/app/data
+
+    restart: unless-stopped
+    healthcheck:
+      test: [
+              "CMD", 
+              "node", 
+              "-e", 
+              "fetch('http://127.0.0.1:3000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+            ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # start_period: 30s
+
+volumes:
+  wiki-data:
