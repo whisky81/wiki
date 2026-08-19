@@ -18,8 +18,11 @@ COPY test ./test
 
 RUN npm run build
 
-RUN mkdir -p /app/data
+RUN mkdir -p /app/data \
+    && chown -R node:node /app
 
 EXPOSE 3000
+
+USER node
 
 CMD ["node", "dist/src/server.js"]
