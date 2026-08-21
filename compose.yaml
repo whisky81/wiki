@@ -1,11 +1,8 @@
 services:
   wiki:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
+    image: ghcr.io/${IMAGE_REPO:-whisky81/wiki}:${IMAGE_TAG}
     ports:
-      - "${FORWARD_PORT}:3000"
+      - "${FORWARD_PORT:-3000}:3000"
 
     env_file:
       - .env
@@ -14,17 +11,19 @@ services:
       - wiki-data:/app/data
 
     restart: unless-stopped
+
     healthcheck:
-      test: [
-              "CMD", 
-              "node", 
-              "-e", 
-              "fetch('http://127.0.0.1:3000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
-            ]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
-      # start_period: 30s
+      start_period: 10s
 
 volumes:
   wiki-data:
