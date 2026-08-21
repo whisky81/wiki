@@ -1,6 +1,9 @@
 services:
   wiki:
-    image: ghcr.io/${IMAGE_REPO:-whisky81/wiki}:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/${IMAGE_REPO:-whisky81/wiki}:${IMAGE_TAG:-local}
     ports:
       - "${FORWARD_PORT:-3000}:3000"
 

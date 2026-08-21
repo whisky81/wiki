@@ -1,4 +1,4 @@
-FROM node:22-bookworm-slim AS build
+FROM node:22-bookworm-slim AS dev
 
 WORKDIR /app
 
@@ -15,6 +15,9 @@ RUN npm ci
 COPY tsconfig.json ./
 COPY src ./src
 COPY test ./test
+
+
+FROM dev AS build
 
 RUN npm run build
 RUN npm prune --omit=dev

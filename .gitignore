@@ -6,3 +6,5 @@ data/*.db-wal
 data/*.db-shm
 
 .env
+compose.override.yaml
+compose.override.yml
