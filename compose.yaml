@@ -4,8 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     image: ghcr.io/${IMAGE_REPO:-whisky81/wiki}:${IMAGE_TAG:-local}
-    ports:
-      - "${FORWARD_PORT:-3000}:3000"
+    # ports:
+    #   - "${FORWARD_PORT:-3000}:3000"
+    expose:
+      - "3000"
 
     env_file:
       - .env
@@ -28,5 +30,30 @@ services:
       retries: 3
       start_period: 10s
 
+    networks:
+      - app
+  
+  caddy:
+    image: caddy:2
+    environment:
+      - SERVER_NAME=${SERVER_NAME:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    
+    depends_on:
+      - wiki
+    networks:
+      - app
+
 volumes:
   wiki-data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app:

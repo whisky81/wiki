@@ -1,0 +1,3 @@
+{$SERVER_NAME:localhost} {
+    reverse_proxy wiki:3000
+}
