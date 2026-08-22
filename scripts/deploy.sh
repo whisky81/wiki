@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cd /opt/wiki-app
+cd "$HOME/wiki-app"
 
 if [ -z "${IMAGE_TAG:-}" ]; then
   echo "Error: IMAGE_TAG environment variable is not set." >&2

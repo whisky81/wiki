@@ -50,7 +50,7 @@ Nguyên lý: **image production tối giản** — không có source TypeScript,
 
 1. **`test`** — chạy trên mọi push/PR vào `main`: `npm ci` + `npm run verify` (build TypeScript + test suite).
 2. **`build-and-publish`** — chỉ khi push trực tiếp vào `main` (không chạy trên PR): build Docker image, gắn tag bằng `GITHUB_SHA`, push lên GHCR.
-3. **`deploy`** — SSH vào VPS, `scp` `compose.yaml` + `Caddyfile` mới nhất lên, rồi chạy `scripts/deploy.sh` qua SSH với `IMAGE_TAG=$GITHUB_SHA`.
+3. **`deploy`** — SSH vào VPS, `scp` `compose.yaml` + `Caddyfile` mới nhất lên `~/wiki-app`, rồi chạy `scripts/deploy.sh` qua SSH với `IMAGE_TAG=$GITHUB_SHA`.
 
 Nguyên lý quan trọng:
 - **Immutable artifact**: tag theo SHA thay vì `latest` → mỗi lần deploy biết chính xác build nào đang chạy → dễ audit và rollback.
@@ -71,8 +71,8 @@ Chỉ cần merge/push vào `main`, pipeline tự làm mọi việc. Cần setup
 
 **Trên VPS:**
 1. Cài Docker + Docker Compose plugin.
-2. Tạo thư mục `/opt/wiki-app`.
-3. Tạo file `.env` tại `/opt/wiki-app/.env` (copy từ `.env.example`, chỉnh `SERVER_NAME` theo domain/IP thật).
+2. Tạo thư mục `~/wiki-app` (trong home của user SSH dùng để deploy — **không** dùng `/opt`, vì user đó không có quyền ghi vào `/opt` trừ khi cấu hình sudo, và pipeline không chạy `sudo`).
+3. Tạo file `.env` tại `~/wiki-app/.env` (copy từ `.env.example`, chỉnh `SERVER_NAME` theo domain/IP thật).
 4. Đảm bảo user SSH dùng để deploy có quyền chạy Docker (thuộc group `docker`).
 
 **Trên GitHub repo → Settings → Secrets and variables → Actions**, cần khai báo:
@@ -89,7 +89,7 @@ Chỉ cần merge/push vào `main`, pipeline tự làm mọi việc. Cần setup
 
 ### 3.2 Deploy thủ công trên VPS (chạy tay hoặc rollback)
 ```bash
-cd /opt/wiki-app
+cd ~/wiki-app
 export IMAGE_TAG=<git-sha-muon-deploy>   # bắt buộc
 export IMAGE_REPO=whisky81/wiki           # optional, đã có giá trị mặc định đúng
 bash scripts/deploy.sh
