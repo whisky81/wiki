@@ -17,10 +17,10 @@ if [ -n "${REGISTRY_USER:-}" ] && [ -n "${REGISTRY_TOKEN:-}" ]; then
 fi
 
 # Pull the exact immutable artifact built in CI
-docker compose pull wiki
+docker compose pull
 
 # Restart/Update container with the new image
-docker compose up -d wiki
+docker compose up -d
 
 # Wait and verify health
 echo "Verifying deployment..."
