@@ -1,0 +1,20 @@
+# Development Override Template
+# Copy file này thành `compose.override.yaml` ở máy local của bạn để bật chế độ Hot-Reload:
+#   cp compose.override.yaml.example compose.override.yaml
+#   docker compose up
+
+services:
+  wiki:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/app/src
+      - ./test:/app/test
+      - ./tsconfig.json:/app/tsconfig.json
+      # Anonymous volume để tránh ghi đè node_modules đã compile C++ bên trong container
+      - /app/node_modules
