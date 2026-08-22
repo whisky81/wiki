@@ -83,8 +83,14 @@ jobs:
           VPS_PORT: ${{ secrets.VPS_PORT }}
           IMAGE_REPO: ${{ github.repository }}
         run: |
-          # Pass IMAGE_TAG and IMAGE_REPO over SSH environment to deploy.sh
-          ssh \
-            -p "$VPS_PORT" \
-            "$VPS_USER@$VPS_HOST" \
-            "IMAGE_TAG='${GITHUB_SHA}' IMAGE_REPO='$(echo "$IMAGE_REPO" | tr '[:upper:]' '[:lower:]')' bash -s" < scripts/deploy.sh
+          IMAGE_REPO_LOWER=$(echo "$IMAGE_REPO" | tr '[:upper:]' '[:lower:]')
+
+          # 1. Đảm bảo thư mục đích tồn tại trên VPS
+          ssh -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" "mkdir -p /opt/wiki-app"
+
+          # 2. Copy compose.yaml và Caddyfile mới nhất lên VPS
+          scp -P "$VPS_PORT" compose.yaml Caddyfile "$VPS_USER@$VPS_HOST":/opt/wiki-app/
+
+          # 3. Chạy deploy script qua SSH
+          ssh -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" \
+            "IMAGE_TAG='${GITHUB_SHA}' IMAGE_REPO='${IMAGE_REPO_LOWER}' bash -s" < scripts/deploy.sh

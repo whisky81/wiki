@@ -9,7 +9,10 @@ if [ -z "${IMAGE_TAG:-}" ]; then
   exit 1
 fi
 
-echo "Deploying release: ${IMAGE_TAG}..."
+export IMAGE_TAG
+export IMAGE_REPO="${IMAGE_REPO:-whisky81/wiki}"
+
+echo "Deploying release: ${IMAGE_TAG} (repo: ${IMAGE_REPO})..."
 
 # Login if credentials are provided via environment variables (for private GHCR repos)
 if [ -n "${REGISTRY_USER:-}" ] && [ -n "${REGISTRY_TOKEN:-}" ]; then
