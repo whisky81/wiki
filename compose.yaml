@@ -39,7 +39,7 @@ services:
       - SERVER_NAME=${SERVER_NAME:-localhost}
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443" # bật lại khi có domain thật + auto_https (bỏ "auto_https off" trong Caddyfile)
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

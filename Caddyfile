@@ -1,3 +1,7 @@
-:80, {$SERVER_NAME:localhost} {
-    reverse_proxy wiki:3000
+{
+	auto_https off
+}
+
+:80, {$SERVER_NAME:localhost}:80 {
+	reverse_proxy wiki:3000
 }

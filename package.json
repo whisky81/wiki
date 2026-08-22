@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "CHOKIDAR_USEPOLLING=1 tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "test": "node --test dist/test/*.test.js",
     "verify": "npm run build && npm run test"
   },
